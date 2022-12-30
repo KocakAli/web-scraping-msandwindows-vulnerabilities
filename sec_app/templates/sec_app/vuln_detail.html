@@ -1,0 +1,67 @@
+{% extends 'sec_app/layout.html' %}
+{% load static%}
+
+{% block content %}
+<!-- Vulnerability Details-->
+<div class="area">
+    <div class="container mb-5">
+        <div class="row mt-5">
+            <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                <h3 class="card-title">Vulnerability Details</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" value="{{ vul.name }}" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="name">Severity</label>
+                                <input type="text" class="form-control" id="name" value="{% if vul.severity == 4 %}Critical{% elif vul.severity == 3 %}High{% elif vul.severity == 2 %}Medium{% elif vul.severity == 1 %}Low{% else %}Info{% endif %}"disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="cvs_tempscore">Published Date</label>
+                                <input type="text" class="form-control" id="cvs_tempscore" value="{{ vul.date }}" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="tenable_id">Tenable ID</label>
+                            <input type="text" class="form-control" id="tenable_id" value="{{ vul.tenable_id }}" disabled>
+                        </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="cvs_tempscore">CVS Temp Score</label>
+                                <input type="text" class="form-control" id="cvs_tempscore" value="{{ vul.cvs_tempscore }}" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Description div-->
+                    <h5 class="mt-5">Description</h5>
+                    <div class="container" style=" background-color:#e9ecef;border: 1px solid #ced4da;">
+                        {{ vul.description }}
+                    </div>
+    
+                    <h5 class="mt-5">Solution</h5>
+                    <div class="container" style=" background-color:#e9ecef;border: 1px solid #ced4da;">
+                        {{ vul.solution }}
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>    
+</div>
+{% endblock %}
+

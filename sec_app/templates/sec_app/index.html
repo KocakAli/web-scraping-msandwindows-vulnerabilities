@@ -1,0 +1,73 @@
+{% extends 'sec_app/layout.html' %} 
+{% load static%}
+
+{% block content %}
+<div class="area">
+  <div class="d-flex justify-content-center  mx-5 mt-5 p-5">
+    <div id="kutu2" class="p-4">
+      <div class="g-box d-flex flex-column justify-content-center align-items-center">
+        <label for="myChart3">Yıllara Göre Toplam Zaaf Sayıları</label>
+        <canvas class="mt-2" id="myChart3" style=" width: 300px; height: 300px;border-radius: 10px;"></canvas>
+      </div>
+      <div class="g-box d-flex flex-column justify-content-center align-items-center">
+        <label for="myChart3">Tüm Yıllar Toplam Risk Düzeyleri</label>
+        <canvas id="myChart4" style="width: 300px; height: 300px; border-radius: 10px;"></canvas>    
+      </div>
+      <div class="g-box d-flex flex-column justify-content-center align-items-center">
+        <label for="myChart3">2022 Yılı Toplam Risk Düzeyleri</label>
+        <canvas id="myChart5" style="width: 300px; height: 300px; border-radius: 10px;"></canvas>    
+      </div>
+    </div>
+   </div>
+  <!-- Verileri çekme ve  tüm veriler silme -->
+  <div class="container">
+    <div class="d-flex justify-content-center">
+          <button id="veri" type="button" class="btn btn-primary mx-3"><a class="text-white" href="{% url 'get_microsoft_vulns' %}">Zaafları kontrol et</a> </button>
+          <button id="veri_sil" type="button" class="btn btn-danger mx-3"><a class="text-white" href="{% url 'del' %}">Tüm zaafları temizle</a> </button>
+    </div>
+  </div>
+  <div class="container mt-5">
+    <table class="table table-hover ">
+      <!--Table head-->
+      <thead class="th-color">
+        <tr class="text-white">
+          <th class="ps-4"><a href="{% url  'index' 'id'%}" class="text-white">ID</a></th>
+          <th><a href="{% url  'index' 'name' %}" class="text-white">Name</a></th>
+          <th><a href="{% url  'index' 'base_score' %}" class="text-white">Base Score</a></th>
+          <th><a href="{% url  'index' 'severity' %}" class="text-white">Severity</a></th>
+          <th><a href="{% url  'index' 'date' %}" class="text-white">Date</a></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for vuln in vuls %}
+        <tr style="background-color: #f1f1f1;" >
+          <th class="ps-4" scope="row"><a href="{% url 'vuln_detail' vuln.tenable_id %}">{{vuln.tenable_id }}</a></th>
+          <td>{{ vuln.name }}</td>
+          <td>{{ vuln.cvs_tempscore}}</td>
+          <td>
+            {% if vuln.severity == 4 %}
+            <span class="badge bg-dark">Critical</span>
+            {% elif vuln.severity == 3 %}
+            <span class="badge bg-danger">High</span>
+            {% elif vuln.severity == 2 %}
+            <span class="badge bg-warning">Medium</span>
+            {% elif vuln.severity == 1 %}
+            <span class="badge bg-success">Low</span>
+            {% else %}
+            <span class="badge bg-secondary">Info</span>
+            {% endif %}
+          </td>
+          <td>{{ vuln.date }}</td>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+  let veri1 = document.getElementById('veri');
+  let veri_sil = document.getElementById('veri_sil');
+
+  veri1.addEventListener('click', function(){
+    alert('Bu işlem zaman alabilir zaaflar ekranda gözükene kadar lütfen bekleyiniz.');});
+</script>
+{% endblock %}
