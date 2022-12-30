@@ -22,7 +22,7 @@
   <!-- Verileri çekme ve  tüm veriler silme -->
   <div class="container">
     <div class="d-flex justify-content-center">
-          <button id="veri" type="button" class="btn btn-primary mx-3"><a class="text-white" href="{% url 'get_microsoft_vulns' %}">Zaafları kontrol et</a> </button>
+          <button id="veri" type="button" class="btn btn-primary mx-3"><a class="text-white" href="{% url 'get_vulns' %}">Zaafları kontrol et</a> </button>
           <button id="veri_sil" type="button" class="btn btn-danger mx-3"><a class="text-white" href="{% url 'del' %}">Tüm zaafları temizle</a> </button>
     </div>
   </div>
@@ -54,7 +54,7 @@
             {% elif vuln.severity == 1 %}
             <span class="badge bg-success">Low</span>
             {% else %}
-            <span class="badge bg-secondary">Info</span>
+            <span class="badge bg-info">Info</span>
             {% endif %}
           </td>
           <td>{{ vuln.date }}</td>

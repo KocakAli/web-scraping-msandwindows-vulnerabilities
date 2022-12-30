@@ -46,15 +46,15 @@ def vuln_detail(request,id):
 ### Çıkan sonuçlara göre ilk 15 sayfadaki her bir zaafiyetin sayfasına girip bilgilerini çekiyoruz
 ### Çektiğimiz bilgileri veritabanına kaydediyoruz
 
-
-def get_microsoft_vulns(request):
+words = ["microsoft","windows"]
+def get_vulns(request):
     ### Kaç sayfada arama yapılacak
-    sayfa_sayisi = 1
-
-    while sayfa_sayisi < 15:
-        print(f"------------Sayfa: {sayfa_sayisi}-------------")
+    baslangic_sayfasi = 1
+    aranacak_sayfa_sayisi = 10
+    while baslangic_sayfasi < aranacak_sayfa_sayisi:
+        print(f"------------Sayfa: {baslangic_sayfasi}-------------")
         ### urldeki microsoft kelimesi yerine ne yazarsak o keyword ile arama yapar
-        url = f"https://www.tenable.com/plugins/search?q=microsoft+vulnerability&sort=&page={sayfa_sayisi}"
+        url = f"https://www.tenable.com/plugins/search?q={words[0]}+{words[1]}&sort=&page={baslangic_sayfasi}"
 
         r = requests.get(url)
 
@@ -120,23 +120,25 @@ def get_microsoft_vulns(request):
 
             ### Zaafların risk seviyesini belirliyoruz
             ### Bu belirleme CVS3 e göre yapılmıştır
-            if base_score <= 3.9:
+            if base_score >= 0.1 and base_score <= 3.9:
                 severity = 1
-            elif base_score <= 6.9:
+            elif base_score > 3.9 and base_score <= 6.9:
                 severity = 2
-            elif base_score <= 8.9:
+            elif base_score > 6.9 and base_score <= 8.9:
                 severity = 3
-            else:
+            elif base_score > 8.9 and base_score <= 10:
                 ### Zaaf kritikse mail gönderiyoruz
                 ### Bu işlem veri çekme hızını önemli ölçüde azaltabiliyor
-                send_mail("Kritik Zaaf",f"ID:{id}\nName: {name}\nDescription: {desc}","noreply@gmail.com",["coworkers@gmail.com"])
+                # send_mail("Kritik Zaaf",f"ID:{id}\nName: {name}\nDescription: {desc}","noreply@gmail.com",["coworkers@gmail.com"])
                 severity = 4
+            else:
+                severity = 0
             
             print("Satır Kaydedildi")
             vul = Vulnerability(tenable_id=id,name=name,description=desc,solution=sol,cvs_tempscore=base_score,severity=severity,date=dt.strptime(date, "%m/%d/%Y"))
             vul.save()
-        sayfa_sayisi += 1
-    return HttpResponse("Vulnerabilities are checked")
+        baslangic_sayfasi += 1
+    return redirect("index")
 
 ### Databasedeki tüm verileri sıfırlıyoruz
 def delete_vulns(request):
@@ -175,3 +177,5 @@ def vulnerabilites_years(request):
     dict1 = {"graph1_data":graph1_data,"graph2_data":graph2_data,"graph3_data":graph3_data}
    
     return JsonResponse(dict1)
+
+
